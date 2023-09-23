@@ -25,8 +25,6 @@ public class Client extends Thread {
 
       sender.join();
       receiver.join();
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
     } catch (IOException e) {
       e.printStackTrace();
     }
