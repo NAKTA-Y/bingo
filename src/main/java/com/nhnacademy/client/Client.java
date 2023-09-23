@@ -20,11 +20,15 @@ public class Client extends Thread {
       Sender sender = new Sender(socket);
       Receiver receiver = new Receiver(socket);
 
+      socket.getOutputStream().write((id + System.lineSeparator()).getBytes());
+      socket.getOutputStream().flush();
+
       sender.send();
       receiver.receive();
 
       sender.join();
       receiver.join();
+
     } catch (IOException e) {
       e.printStackTrace();
     }
