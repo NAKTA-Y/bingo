@@ -3,6 +3,9 @@ package com.nhnacademy.client;
 import java.io.IOException;
 import java.net.Socket;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Client extends Thread {
   private String id;
   private final String host;
@@ -29,7 +32,7 @@ public class Client extends Thread {
       sender.join();
       receiver.join();
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("error message: {}", e);
     }
   }
 }

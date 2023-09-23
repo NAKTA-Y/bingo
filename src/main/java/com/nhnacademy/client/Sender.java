@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Sender implements Runnable {
   Thread thread;
   Socket socket;
@@ -29,7 +32,7 @@ public class Sender implements Runnable {
       }
 
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("error message: {}", e);
     }
   }
 
@@ -41,7 +44,7 @@ public class Sender implements Runnable {
     try {
       thread.join();
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      log.error("error message: {}", e);
     }
   }
 }
