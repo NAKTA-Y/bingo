@@ -28,7 +28,6 @@ public class Client extends Thread {
 
       sender.join();
       receiver.join();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
