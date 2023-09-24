@@ -21,7 +21,8 @@ public enum BingoDB {
     private final Map<String, Socket> userInfo = new HashMap<>();
     private final Map<String, String[][]> userBoards = new HashMap<>();
 
-    public void createUser(String id) {
+    public void createUser(String id, Socket socket) {
+        userInfo.put(id, socket);
         String[][] bingoBoard = BINGO_BOARD_FRAME.clone();
         userBoards.put(id, bingoBoard);
     }
