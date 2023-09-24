@@ -17,6 +17,10 @@ public enum BingoGameManagement {
     private void selectBingoBoard() {
     }
 
+    // 빙고 선택 여부 체크
+    private boolean isSelected() {
+    }
+
     // 클라이언트 빙고 중복 여부 체크
     private boolean isDuplicated() {
     }
