@@ -13,10 +13,12 @@ public enum BingoGameManagement {
     private void recordBingoBoard() {
     }
 
+    // TODO (ㅅㅇ)
     // 클라이언트 빙고맵 선택
     private void selectBingoBoard() {
     }
 
+    // TODO (ㅅㅇ)
     // 빙고 선택 여부 체크
     private boolean isSelected() {
     }
@@ -33,10 +35,12 @@ public enum BingoGameManagement {
     public boolean isAllCompletedInputBoard() {
     }
 
+    // TODO (ㅅㅇ)
     // 빙고 승리 여부 체크
     private boolean isWinner() {
     }
 
+    // TODO (ㅅㅇ)
     // 빙고 무승부 여부 체크
     private boolean isDraw() {
     }
