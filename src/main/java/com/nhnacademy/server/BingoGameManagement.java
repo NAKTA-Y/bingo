@@ -6,15 +6,15 @@ public enum BingoGameManagement {
     INSTANCE;
 
     // 클라이언트 생성 요청
-    public void requestGenerateClient(){
+    private void requestGenerateClient(){
     }
 
     // 클라이언트 빙고맵 기록
-    public void recordBingoBoard() {
+    private void recordBingoBoard() {
     }
 
     // 클라이언트 빙고맵 선택
-    public void selectBingoBoard() {
+    private void selectBingoBoard() {
     }
 
     // 클라이언트 빙고 중복 여부 체크
