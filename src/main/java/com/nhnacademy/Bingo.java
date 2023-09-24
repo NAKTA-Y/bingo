@@ -1,4 +1,4 @@
-package com.nhnacademy.main;
+package com.nhnacademy;
 
 import java.io.IOException;
 import java.net.ServerSocket;
