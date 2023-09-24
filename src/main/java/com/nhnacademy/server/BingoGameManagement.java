@@ -1,6 +1,5 @@
 package com.nhnacademy.server;
 
-import com.nhnacademy.Bingo;
 import com.nhnacademy.database.BingoDB;
 import com.nhnacademy.exception.AlreadySelectedException;
 import com.nhnacademy.exception.DrawException;

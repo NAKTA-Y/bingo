@@ -9,7 +9,10 @@ import java.net.Socket;
 import java.util.Map;
 
 import com.nhnacademy.database.BingoDB;
+import com.nhnacademy.exception.AlreadySelectedException;
 import com.nhnacademy.exception.DrawException;
+import com.nhnacademy.exception.DuplicateNumberException;
+import com.nhnacademy.exception.SelectOrderException;
 import com.nhnacademy.exception.WinnerException;
 import com.nhnacademy.message.Message;
 import com.nhnacademy.message.MessageType;
@@ -38,9 +41,9 @@ public class CommunicationServer extends Thread {
             synchronized (BingoGameManagement.INSTANCE) {
                 try {
                     while (!BingoGameManagement.INSTANCE.isEnoughPersonCount()) {
-                        wait();
+                        BingoGameManagement.INSTANCE.wait();
                     }
-                    notifyAll();
+                    BingoGameManagement.INSTANCE.notifyAll();
                 } catch (InterruptedException e) {
                     log.error("error message: {}", e);
                     Thread.currentThread().interrupt();
@@ -49,10 +52,15 @@ public class CommunicationServer extends Thread {
 
             // TODO (ㅅㅇ)
             // 빙고판 숫자 입력
-            while (BingoGameManagement.INSTANCE.isCompletedInputBoard(clientId)) {
-                String number = bufferedReader.readLine();
-                BingoGameManagement.INSTANCE.sendMessage(new Message(clientId, number, MessageType.INPUT), socket);
-                writeBoard(socket, clientId);
+            while (!BingoGameManagement.INSTANCE.isCompletedInputBoard(clientId)) {
+                try {
+                    writeBoard(socket, clientId);
+                    String number = bufferedReader.readLine();
+                    BingoGameManagement.INSTANCE.sendMessage(new Message(clientId, number, MessageType.INPUT), socket);
+                } catch (RuntimeException e) {
+                    bufferedWriter.write(e.getMessage() + System.lineSeparator());
+                    bufferedWriter.flush();
+                }
             }
 
             // TODO (ㅅㅇ)
@@ -60,9 +68,9 @@ public class CommunicationServer extends Thread {
             synchronized (BingoGameManagement.INSTANCE) {
                 try {
                     while (!BingoGameManagement.INSTANCE.isAllCompletedInputBoard()) {
-                        wait();
+                        BingoGameManagement.INSTANCE.wait();
                     }
-                    notifyAll();
+                    BingoGameManagement.INSTANCE.notifyAll();
                 } catch (InterruptedException e) {
                     log.error("error message: {}", e);
                     Thread.currentThread().interrupt();
@@ -91,7 +99,7 @@ public class CommunicationServer extends Thread {
                 } catch (NumberFormatException e) {
                     bufferedWriter.write("숫자를 입력해주세요." + System.lineSeparator());
                     bufferedWriter.flush();
-                } catch (RuntimeException e) {
+                } catch (AlreadySelectedException | SelectOrderException e) {
                     bufferedWriter.write(e.getMessage() + System.lineSeparator());
                     bufferedWriter.flush();
                 }
@@ -135,17 +143,18 @@ public class CommunicationServer extends Thread {
     }
 
     public void writeBoard(Socket socket, String id) {
-        Map<String, String[][]> userBoards = BingoDB.INSTANCE.getUserBoards();
+        String[][] board = BingoDB.INSTANCE.getBoardById(id);
 
-        String[][] board = userBoards.get(id);
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                try {
-                    socket.getOutputStream().write((board[i][j] + System.lineSeparator()).getBytes());
-                } catch (IOException e) {
-                    log.error("error message: {}", e);
+        try {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    socket.getOutputStream().write((board[i][j] + " ").getBytes());
                 }
+                socket.getOutputStream().write(System.lineSeparator().getBytes());
             }
+            socket.getOutputStream().flush();
+        } catch (IOException e) {
+            log.error(e.getMessage());
         }
     }
 }
