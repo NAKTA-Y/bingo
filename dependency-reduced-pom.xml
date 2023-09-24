@@ -42,7 +42,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.nhnacademy.Bingo</mainClass>
+                  <mainClass>com.nhnacademy.main.Bingo</mainClass>
                 </transformer>
               </transformers>
             </configuration>
