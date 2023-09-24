@@ -55,9 +55,10 @@ public enum BingoGameManagement {
 
     // TODO (ㅅㅇ)
     // 클라이언트 빙고맵 선택
-    private void selectBingoBoard(String number, String id) {
+    private void selectBingoBoard(String id, int number) {
+        String numberFormat = String.format("%02d", number);
 
-        if (isSelected(number, BingoDB.INSTANCE.getBoardById(id))) {
+        if (isSelected(numberFormat, BingoDB.INSTANCE.getBoardById(id))) {
             throw new AlreadySelectedException("이미 선택된 숫자입니다.");
         }
 
@@ -69,8 +70,8 @@ public enum BingoGameManagement {
 
                 for (int i = 0; i < board.length; i++) {
                     for (int j = 0; j < board[i].length; j++) {
-                        if (board[i][j].equals(number)) {
-                            board[i][j] = "[" + number + "]";
+                        if (board[i][j].equals(numberFormat)) {
+                            board[i][j] = "[" + numberFormat + "]";
                         }
                     }
                 }
@@ -79,7 +80,7 @@ public enum BingoGameManagement {
 
                 for (int i = 0; i < board.length; i++) {
                     for (int j = 0; j < board[i].length; j++) {
-                        if (board[i][j].equals(number)) {
+                        if (board[i][j].equals(numberFormat)) {
                             board[i][j] = "xx";
                         }
                     }
@@ -155,7 +156,7 @@ public enum BingoGameManagement {
                 isVictory = true;
             }
             if (board[0][i].equals("[\\d\\d]") && board[1][i].equals("[\\d\\d]") && board[2][i].equals("[\\d\\d]")
-                    && board[3][i].equals("[\\d\\d]") && board[4][i].equals("[\\d\\d]") {
+                    && board[3][i].equals("[\\d\\d]") && board[4][i].equals("[\\d\\d]")) {
                 board[0][i] = "B";
                 board[1][i] = "I";
                 board[2][i] = "N";
@@ -198,19 +199,26 @@ public enum BingoGameManagement {
     // 메시지 타입 체크 메서드 및 호출
     public void sendMessage(Message message, Socket socket) {
         MessageType type = message.getMessageType();
+        String[] messageSplit;
+        String userId;
+        int number;
 
         switch (type) {
             case CREATE:
                 requestGenerateClient(message.getPayload(), socket);
                 break;
             case INPUT:
-                String[] messageSplit = message.getPayload().split(",");
-                String userId = messageSplit[0];
-                int number = Integer.parseInt(messageSplit[1]);
+                messageSplit = message.getPayload().split(",");
+                userId = messageSplit[0];
+                number = Integer.parseInt(messageSplit[1]);
 
                 recordBingoBoard(userId, number);
                 break;
             case SELECT:
+                messageSplit = message.getPayload().split(",");
+                userId = messageSplit[0];
+                number = Integer.parseInt(messageSplit[1]);
+                selectBingoBoard(userId, number);
         }
     }
 }
