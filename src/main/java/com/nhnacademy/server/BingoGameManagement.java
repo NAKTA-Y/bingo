@@ -1,14 +1,11 @@
 package com.nhnacademy.server;
 
 import com.nhnacademy.database.BingoDB;
+import com.nhnacademy.exception.AlreadySelectedException;
+import com.nhnacademy.exception.DrawException;
 import com.nhnacademy.exception.DuplicateNumberException;
 import com.nhnacademy.exception.OutOfRangeNumberException;
 import com.nhnacademy.exception.UserAlreadyExistsException;
-import java.util.Map;
-
-import com.nhnacademy.database.BingoDB;
-import com.nhnacademy.exception.AlreadySelectedException;
-import com.nhnacademy.exception.DrawException;
 import com.nhnacademy.exception.WinnerException;
 import com.nhnacademy.message.Message;
 import com.nhnacademy.message.MessageType;
@@ -90,7 +87,7 @@ public enum BingoGameManagement {
             }
         }
 
-        if (isWinner()) {
+        if (isWinner(id)) {
             throw new WinnerException(id);
         }
 
@@ -170,21 +167,11 @@ public enum BingoGameManagement {
 
         if (board[0][0].equals(board[1][1]) && board[1][1].equals(board[2][2]) && board[2][2].equals(board[3][3])
                 && board[3][3].equals(board[4][4]) && board[4][4].equals(board[0][0])) {
-            board[0][0] = "B";
-            board[1][1] = "I";
-            board[2][2] = "N";
-            board[3][3] = "G";
-            board[4][4] = "O";
-            isVictory = true;
-        }
-
-        if (board[0][4].equals(board[1][3]) && board[1][3].equals(board[2][2]) && board[2][2].equals(board[3][1])
-                && board[3][1].equals(board[4][0]) && board[4][0].equals(board[0][4])) {
-            board[0][4] = "B";
-            board[1][3] = "I";
-            board[2][2] = "N";
-            board[3][1] = "G";
-            board[4][0] = "O";
+            board[0][i] = "B";
+            board[1][i] = "I";
+            board[2][i] = "N";
+            board[3][i] = "G";
+            board[4][i] = "O";
             isVictory = true;
         }
 
@@ -194,7 +181,6 @@ public enum BingoGameManagement {
     // TODO (ㅅㅇ)
     // 빙고 무승부 여부 체크
     private boolean isDraw() {
-
     }
 
     // 메시지 타입 체크 메서드 및 호출
