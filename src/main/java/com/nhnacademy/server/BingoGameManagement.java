@@ -1,10 +1,12 @@
 package com.nhnacademy.server;
 
+import com.nhnacademy.Bingo;
 import com.nhnacademy.database.BingoDB;
 import com.nhnacademy.exception.AlreadySelectedException;
 import com.nhnacademy.exception.DrawException;
 import com.nhnacademy.exception.DuplicateNumberException;
 import com.nhnacademy.exception.OutOfRangeNumberException;
+import com.nhnacademy.exception.SelectOrderException;
 import com.nhnacademy.exception.UserAlreadyExistsException;
 import com.nhnacademy.exception.WinnerException;
 import com.nhnacademy.message.Message;
@@ -12,9 +14,32 @@ import com.nhnacademy.message.MessageType;
 
 import java.net.Socket;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public enum BingoGameManagement {
     INSTANCE;
+
+    private String currentUser;
+    private Random random = new Random();
+
+    // 랜덤 순서 정하기
+    public void randomOrder() {
+        Set<String> userIds = BingoDB.INSTANCE.getUserIds();
+        int randomOrder = random.nextInt(2);
+        int count = 0;
+
+        for (String id : userIds) {
+            if (count++ == randomOrder) {
+                currentUser = id;
+                break;
+            }
+        }
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
 
     // 클라이언트 생성 요청
     private void requestGenerateClient(String userId, Socket socket) {
@@ -53,9 +78,27 @@ public enum BingoGameManagement {
         }
     }
 
+    public boolean isCompletedInputBoard(String userId) {
+        String[][] board = BingoDB.INSTANCE.getBoardById(userId);
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j].equals("00")) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     // TODO (ㅅㅇ)
     // 클라이언트 빙고맵 선택
     private void selectBingoBoard(String id, int number) {
+        if (currentUser.equals(id)) {
+            throw new SelectOrderException("당신의 턴이 아닙니다.");
+        }
+
         String numberFormat = String.format("%02d", number);
 
         if (isSelected(numberFormat, BingoDB.INSTANCE.getBoardById(id))) {
@@ -88,8 +131,10 @@ public enum BingoGameManagement {
             }
         }
 
+        currentUser = id;
+
         if (isWinner(id)) {
-            throw new WinnerException(id);
+            throw new WinnerException();
         }
 
         if (isDraw(id)) {
@@ -199,25 +244,21 @@ public enum BingoGameManagement {
     // 메시지 타입 체크 메서드 및 호출
     public void sendMessage(Message message, Socket socket) {
         MessageType type = message.getMessageType();
-        String[] messageSplit;
         String userId;
         int number;
 
         switch (type) {
             case CREATE:
-                requestGenerateClient(message.getPayload(), socket);
+                requestGenerateClient(message.getUserId(), socket);
                 break;
             case INPUT:
-                messageSplit = message.getPayload().split(",");
-                userId = messageSplit[0];
-                number = Integer.parseInt(messageSplit[1]);
-
+                userId = message.getUserId();
+                number = Integer.parseInt(message.getPayload());
                 recordBingoBoard(userId, number);
                 break;
             case SELECT:
-                messageSplit = message.getPayload().split(",");
-                userId = messageSplit[0];
-                number = Integer.parseInt(messageSplit[1]);
+                userId = message.getUserId();
+                number = Integer.parseInt(message.getPayload());
                 selectBingoBoard(userId, number);
         }
     }
