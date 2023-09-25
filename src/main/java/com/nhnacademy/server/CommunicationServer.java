@@ -83,10 +83,7 @@ public class CommunicationServer extends Thread {
             // TODO (ㅅㅇ)
             // 모두에게 각자의 빙고판 보여주기
             Map<String, Socket> userInfo = BingoDB.INSTANCE.getUserInfo();
-            for (String id : userInfo.keySet()) {
-                Socket userSocket = userInfo.get(id);
-                writeBoard(userSocket, id);
-            }
+            writeBoard(socket, clientId);
 
             String input;
             while ((input = bufferedReader.readLine()) != null) {
@@ -113,15 +110,11 @@ public class CommunicationServer extends Thread {
                 writeBoard(userSocket, id);
                 try {
                     if (id.equals(BingoGameManagement.INSTANCE.getCurrentUser())) {
-                        BingoDB.INSTANCE.getUserInfo().get(id).getOutputStream()
-                                .write(("당신이 이겼습니다." + System.lineSeparator()).getBytes());
-                        BingoDB.INSTANCE.getUserInfo().get(id).getOutputStream()
-                                .flush();
+                        userSocket.getOutputStream().write(("당신이 이겼습니다." + System.lineSeparator()).getBytes());
+                        userSocket.getOutputStream().flush();
                     } else {
-                        BingoDB.INSTANCE.getUserInfo().get(id).getOutputStream()
-                                .write(("당신이 졌습니다." + System.lineSeparator()).getBytes());
-                        BingoDB.INSTANCE.getUserInfo().get(id).getOutputStream()
-                                .flush();
+                        userSocket.getOutputStream().write(("당신이 졌습니다." + System.lineSeparator()).getBytes());
+                        userSocket.getOutputStream().flush();
                     }
                 } catch (IOException er) {
                     log.error(er.getMessage());
