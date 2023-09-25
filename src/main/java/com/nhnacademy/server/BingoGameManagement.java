@@ -186,41 +186,43 @@ public enum BingoGameManagement {
     // TODO (ㅅㅇ)
     // 빙고 승리 여부 체크
     private boolean isWinner(String id) {
-        boolean isVictory = false;
         String[][] board = BingoDB.INSTANCE.getBoardById(id);
 
         for (int i = 0; i < board.length; i++) {
-            if (board[i][0].equals("[\\d\\d]") && board[i][1].equals("[\\d\\d]") && board[i][2].equals("[\\d\\d]")
-                    && board[i][3].equals("[\\d\\d]") && board[i][4].equals("[\\d\\d]")) {
+            if (board[i][0].matches("\\[\\d\\d\\]") && board[i][1].matches("\\[\\d\\d\\]")
+                    && board[i][2].matches("\\[\\d\\d\\]")
+                    && board[i][3].matches("\\[\\d\\d\\]") && board[i][4].matches("\\[\\d\\d\\]")) {
                 board[i][0] = "B";
                 board[i][1] = "I";
                 board[i][2] = "N";
                 board[i][3] = "G";
                 board[i][4] = "O";
-                isVictory = true;
+                return true;
             }
-            if (board[0][i].equals("[\\d\\d]") && board[1][i].equals("[\\d\\d]") && board[2][i].equals("[\\d\\d]")
-                    && board[3][i].equals("[\\d\\d]") && board[4][i].equals("[\\d\\d]")) {
+            if (board[0][i].matches("\\[\\d\\d\\]") && board[1][i].matches("\\[\\d\\d\\]")
+                    && board[2][i].matches("\\[\\d\\d\\]")
+                    && board[3][i].matches("\\[\\d\\d\\]") && board[4][i].matches("\\[\\d\\d\\]")) {
                 board[0][i] = "B";
                 board[1][i] = "I";
                 board[2][i] = "N";
                 board[3][i] = "G";
                 board[4][i] = "O";
-                isVictory = true;
+                return true;
             }
         }
 
-        if (board[0][0].equals("[\\d\\d]") && board[1][1].equals("[\\d\\d]") && board[2][2].equals("[\\d\\d]")
-                && board[3][3].equals("[\\d\\d]") && board[4][4].equals("[\\d\\d]")) {
+        if (board[0][0].matches("\\[\\d\\d\\]") && board[1][1].matches("\\[\\d\\d\\]")
+                && board[2][2].matches("\\[\\d\\d\\]")
+                && board[3][3].matches("\\[\\d\\d\\]") && board[4][4].matches("\\[\\d\\d\\]")) {
             board[0][0] = "B";
             board[1][1] = "I";
             board[2][2] = "N";
             board[3][3] = "G";
             board[4][4] = "O";
-            isVictory = true;
+            return true;
         }
 
-        return isVictory;
+        return false;
     }
 
     // TODO (ㅅㅇ)
@@ -231,7 +233,7 @@ public enum BingoGameManagement {
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
-                if (board[i][j].equals("\\d\\d")) {
+                if (board[i][j].matches("\\d\\d")) {
                     isDraw = false;
                 }
             }
