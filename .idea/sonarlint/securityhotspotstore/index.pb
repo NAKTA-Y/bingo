@@ -16,3 +16,7 @@ b
 2src/main/java/com/nhnacademy/database/BingoDB.java,2/2/22efe9c625a921a72b249e66d987a428ec64d18d
 l
 <src/main/java/com/nhnacademy/server/BingoGameManagement.java,7/0/70cdcbcd662c76c87a60d01065584ae59b0e548e
+M
+src/test/java/ServerTest.java,c/0/c08453015dea4979f7d5c6a51f331ad167b39a49
+l
+<src/main/java/com/nhnacademy/server/CommunicationServer.java,c/e/ce01fcbca91e31c0ea18e5f67622ea51c2e6d1dd
