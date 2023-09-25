@@ -225,11 +225,11 @@ public enum BingoGameManagement {
         if (board[0][4].matches("\\[\\d\\d\\]") && board[1][3].matches("\\[\\d\\d\\]")
                 && board[2][2].matches("\\[\\d\\d\\]")
                 && board[3][1].matches("\\[\\d\\d\\]") && board[4][0].matches("\\[\\d\\d\\]")) {
-            board[0][0] = "B";
-            board[1][1] = "I";
+            board[0][4] = "B";
+            board[1][3] = "I";
             board[2][2] = "N";
-            board[3][3] = "G";
-            board[4][4] = "O";
+            board[3][1] = "G";
+            board[4][0] = "O";
             return true;
         }
 
