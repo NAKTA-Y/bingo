@@ -8,6 +8,7 @@ import com.nhnacademy.exception.WinnerException;
 import com.nhnacademy.message.Message;
 import com.nhnacademy.message.MessageType;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -137,7 +138,8 @@ public class CommunicationServer extends Thread {
         try {
             for (int i = 0; i < board.length; i++) {
                 for (int j = 0; j < board[i].length; j++) {
-                    socket.getOutputStream().write((board[i][j] + " ").getBytes());
+                    String centerFormat = StringUtils.center(board[i][j], 4);
+                    socket.getOutputStream().write(centerFormat.getBytes());
                 }
                 socket.getOutputStream().write(System.lineSeparator().getBytes());
             }
